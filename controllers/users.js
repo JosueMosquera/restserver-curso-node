@@ -1,6 +1,7 @@
 const { response, request } = require("express");
 const bcryptjs = require("bcryptjs");
 const Usuario = require("../models/usuario");
+const { login } = require("./auth");
 
 const getUsers = async(req = request, res = response) => {
   //const { name = "no name", apellido } = req.query;
@@ -21,7 +22,8 @@ const postUsers = async (req, res = response) => {
   const usuario = new Usuario({ nombre, correo, password, rol });
   //verificar si el correo existe
   //encryptar la contraseña
-
+  const salt = bcryptjs.genSaltSync();
+  usuario.password=bcryptjs.hashSync(password,salt)
   //guardar en la bd
   await usuario.save();
   res.json({
@@ -42,8 +44,7 @@ const deleteUsers = async(req, res = response) => {
   const{id} = req.params;
   // fisicamente lo borramos
   const usuario = await Usuario.findByIdAndUpdate(id,{estado:false});
-
-  res.json(usuario);
+  res.json({usuario});
 };
 module.exports = {
   getUsers,

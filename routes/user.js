@@ -11,7 +11,15 @@ const {
   emailExiste,
   existeUsuarioID,
 } = require("../helpers/db-validators");
-const { validarCampos } = require("../middlewares/validar-campos");
+/*const { validarCampos } = require("../middlewares/validar-campos");
+const { validarJWT } = require("../middlewares/validar-jwt");
+const { esadminRol,tieneRol } = require("../middlewares/validar-roles");*/
+const {
+  validarCampos,
+  validarJWT,
+  esadminRol,
+  tieneRol,
+} = require("../middlewares");
 const router = Router();
 router.get("/", getUsers);
 router.put(
@@ -42,6 +50,9 @@ router.post(
 router.delete(
   "/:id",
   [
+    validarJWT,
+    //esadminRol, a fuerza me obliga a ser admin
+    tieneRol("ADMIN_ROLE", "VENTAS_ROLE"), //en este le puedo poner los roles que desee
     check("id", "no es un id valido").isMongoId(),
     check("id").custom(existeUsuarioID),
   ],
