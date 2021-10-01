@@ -30,6 +30,9 @@ const ProductoSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: "Categoria",
     required: true,
+  },
+  img:{
+    type:String
   }
 });
 ProductoSchema.methods.toJSON = function () {
